@@ -1,79 +1,122 @@
-# EXP 1 : Linear and Circular Convolution
+## EXP 2 : LINEAR AND CIRCULAR CONVOLUTION FOR GIVEN TWO SEQUENCE
 
-## AIM: 
-
+### AIM  
  To perform Linear and Circular Convolution for two given sequence using SCILAB. 
 
-## APPARATUS REQUIRED: 
-PC installed with SCILAB. 
+### APPARATUS REQUIRED  
+PC installed with SCILAB.   
 
-## PROGRAM
-
-### LINEAR CONVOLUTION
-```
+### PROGRAM - LINEAR CONVOLUTION 
+```python
 clc;
 clear;
-close;
+x = input("First sequence x(n): ");
+h = input("Second sequence h(n): ");
+lx = length(x);
+lh = length(h);
+ly = lx + lh - 1;
 
-// Given sequences
-x = [3 2 1 2];
-h = [1 2 1 2];
+y_lin_formula = zeros(1, ly);
+for n = 1:ly
+    for k = 1:lx
+        if (n-k+1 >= 1) & (n-k+1 <= lh) then
+            y_lin_formula(n) = y_lin_formula(n) + x(k)*h(n-k+1);
+        end
+    end
+end
 
-// Linear Convolution
-y_linear = convol(x, h);
+disp("Linear Convolution using Formula:");
+disp(y_lin_formula);
 
-// Display result
-disp("Linear Convolution Result:");
-disp(y_linear);
+y_lin_builtin = convol(x, h);
+disp("Linear Convolution using Built-in Function:");
+disp(y_lin_builtin);
 
-// Time index
-n = 0:length(y_linear)-1;
+clf;
 
-// Plot using plot2d3() for discrete signal
-figure;
-plot2d3(n, y_linear);
-xlabel("n");
-ylabel("Amplitude");
-title("Linear Convolution of x(n) and h(n)");
+subplot(4,1,1);
+plot2d3(0:lx-1, x);
+title("Input Sequence x(n)");
+xlabel("n");ylabel("Amplitude");
+
+subplot(4,1,2);
+plot2d3(0:lh-1, h);
+title("Input Sequence h(n)");
+xlabel("n");ylabel("Amplitude");
+
+subplot(4,1,3);
+plot2d3(0:ly-1, y_lin_formula);
+title("Linear Convolution - Formula");
+xlabel("n");ylabel("Amplitude");
+
+subplot(4,1,4);
+plot2d3(0:ly-1, y_lin_builtin);
+title("Linear Convolution - Built-in");
+xlabel("n");ylabel("Amplitude");
+
 ```
 
-### CIRCULAR CONVOLUTION
-
-```
+### PROGRAM - CIRCULAR CONVOLUTION 
+```python
 clc;
 clear;
-close;
+x = input("Enter first sequence x(n): ");
+h = input("Enter second sequence h(n): ");
+lx = length(x);
+lh = length(h);
+N  = max(lx, lh);
 
-// Given sequences
-x = [3 2 1 2];
-h = [1 2 1 2];
+x = [x zeros(1, N-lx)];
+h = [h zeros(1, N-lh)];
 
-// Linear Convolution
-y_linear = convol(x, h);
+y_circ_formula = zeros(1, N);
+for n = 1:N
+    for k = 1:N
+        idx = pmodulo(n-k, N) +1;  
+        y_circ_formula(n) = y_circ_formula(n) + x(k)*h(idx);
+    end
+end
 
-// Display result
-disp("Linear Convolution Result:");
-disp(y_linear);
+disp("Circular Convolution using Formula:");
+disp(y_circ_formula);
 
-// Time index
-n = 0:length(y_linear)-1;
+y_circ_builtin = real(ifft(fft(x).*fft(h)));
+disp("Circular Convolution using Built-in FFT:");
+disp(y_circ_builtin);
 
-// Plot using plot2d3() for discrete signal
-figure;
-plot2d3(n, y_linear);
-xlabel("n");
-ylabel("Amplitude");
-title("Linear Convolution of x(n) and h(n)");
+clf;
+n = 0:N-1;
+
+subplot(4,1,1);
+plot2d3(n, x);
+title("Input Sequence x(n)");
+xlabel("n");ylabel("Amplitude");
+
+subplot(4,1,2);
+plot2d3(n, h);
+title("Input Sequence h(n)");
+xlabel("n");ylabel("Amplitude");
+
+subplot(4,1,3);
+plot2d3(n, y_circ_formula);
+title("Circular Convolution - Formula");
+xlabel("n");ylabel("Amplitude");
+
+subplot(4,1,4);
+plot2d3(n, y_circ_builtin);
+title("Circular Convolution - Built-in FFT");
+xlabel("n");ylabel("Amplitude");
+
 ```
 
-## OUTPUT (Linear Convolution): 
+### OUTPUT - LINEAR CONVOLUTION
+<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/0138e663-05df-4f65-aec6-0f5758643e56" />
+<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/9adc8c69-7d29-4269-a970-fcef0f379b90" />
 
-<img width="1546" height="787" alt="image" src="https://github.com/user-attachments/assets/83447032-b6aa-44d1-a3d2-3c94bf4ae209" />
+### OUTPUT - CIRCULAR CONVOLUTION
+<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/7d31c156-fe4c-4b4b-ba1e-5bab29715f1c" />
+<img width="400" height="400" alt="image" src="https://github.com/user-attachments/assets/3c22c204-1934-4a5b-87ff-cc5c8e22d05a" />
 
-## OUTPUT (Circular Convolution): 
 
-<img width="1590" height="791" alt="image" src="https://github.com/user-attachments/assets/041c44b1-a9a2-4395-9e55-4c33064d2443" />
-
-## RESULT: 
-
-Linear and circular convolution of the sequences were successfully performed in SCILAB and The results were plotted.
+### RESULT
+Thus, the linear convolution and circular convolution of two given sequences were performed and those result were verified.
